@@ -1,0 +1,21 @@
+{
+  "name": "quake-arena-log-parser",
+  "version": "development",
+  "description": "A simple parser for the Quake 3 Arena game's log.",
+  "main": "index.js",
+  "repository": "https://github.com/Vitu-77/quake-arena-log-parser",
+  "author": "vitu-77 <marcelo.victor05@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "scripts": {
+    "start": "nodemon ./src/server.js"
+  }
+}
