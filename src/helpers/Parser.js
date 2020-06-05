@@ -97,4 +97,40 @@ module.exports = {
 			return error;
 		}
 	},
+
+	ranking: (games) => {
+		let ranking = {};
+
+		games.forEach((game) => {
+			for (const player in game.kills) {
+				if (game.kills.hasOwnProperty(player)) {
+					const killer = player;
+					const points = game.kills[killer];
+
+					if (!ranking[killer]) {
+						ranking[killer] = points;
+					} else {
+						ranking[killer] += points;
+					}
+				}
+			}
+		});
+
+		const toArray = (rankingObject) => {
+			const keys = Object.keys(rankingObject);
+			const rankingArray = keys.map((key) => {
+				return { [key]: rankingObject[key] };
+			});
+
+			return rankingArray;
+		};
+
+		ranking = toArray(ranking).sort((a, b) => (a.points > b.points ? 1 : -1));
+
+		Object.assign(ranking, ranking);
+
+		return ranking;
+
+		// return toArray(ranking);
+	},
 };
