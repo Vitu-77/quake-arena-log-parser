@@ -27,21 +27,50 @@ module.exports = {
 
 			const games = [];
 
+			/**
+			 * A função getLinePlayers processa a linha e retorna todos os
+			 * jogadores presentes nela, bem como as kills de cada um
+			 */
+			const getLinePlayers = (line) => {
+				const lineArray = line.split(' ');
+				const currentGame = games[games.length - 1];
+
+				lineArray.forEach((currentPosition, index) => {
+					if (currentPosition === 'killed') {
+						if (lineArray[index - 1] !== '<world>') {
+							const murderer = lineArray[index - 1];
+
+							if (!currentGame.players.includes(murderer)) {
+								currentGame.players.push(murderer);
+							}
+						}
+
+						if (!currentGame.players.includes(lineArray[index + 1])) {
+							const murdered = lineArray[index + 1];
+							currentGame.players.push(murdered);
+						}
+					}
+				});
+			};
+
 			const buildGame = async (line) => {
-				let kills = 0;
+				let totalKills = 0;
 				const id = shortid.generate();
 				const players = [];
+				const kills = {};
 
 				if (line.includes('InitGame')) {
 					games.push({
 						id,
 						players,
-						total_kills: kills,
+						kills,
+						total_kills: totalKills,
 					});
 				}
 
 				if (line.includes('Kill:')) {
 					games[games.length - 1].total_kills = games[games.length - 1].total_kills + 1;
+					getLinePlayers(line);
 				}
 			};
 
