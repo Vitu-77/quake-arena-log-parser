@@ -1,9 +1,13 @@
+const fs = require('fs');
+const path = require('path');
+
 const Parser = require('../helpers/Parser');
 
 module.exports = {
 	index: async (req, res) => {
 		try {
-			const games = await Parser.parse();
+			const logStream = fs.createReadStream(path.resolve(__dirname, '..', 'log', 'quake.log'));
+			const games = await Parser.parse(logStream);
 
 			return res.status(200).json({
 				games,

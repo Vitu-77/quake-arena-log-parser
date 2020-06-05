@@ -1,19 +1,10 @@
-const fs = require('fs');
-const path = require('path');
-
-const shortid = require('shortid');
 const readLine = require('readline');
 
 module.exports = {
-	parse: async () => {
+	parse: async (logStream) => {
 		try {
-			const fileStream = fs.createReadStream(path.resolve(__dirname, '..', 'log', 'quake.log'));
-
-			const _readline = readLine.createInterface({
-				input: fileStream,
-			});
-
-			const games = [];
+			const _readline = readLine.createInterface({ input: logStream });
+			const games = []; // array que armazena todos os jogos do log
 
 			/**
 			 * A função parseLineWithKill processa a linha e retorna todos os
@@ -71,7 +62,7 @@ module.exports = {
 			 */
 			const processLine = async (line) => {
 				let totalKills = 0;
-				const id = shortid.generate();
+				const id = games.length + 1;
 				const players = [];
 				const kills = {};
 
@@ -90,11 +81,18 @@ module.exports = {
 				}
 			};
 
+			/**
+			 * sanitizeGamesArray retira do array possíveis jogos sem jogadores
+			 */
+			const sanitizeGamesArray = (games) => {
+				return games.filter((game) => game.players.length >= 1);
+			};
+
 			for await (const line of _readline) {
 				processLine(line);
 			}
 
-			return games;
+			return sanitizeGamesArray(games);
 		} catch (error) {
 			return error;
 		}
