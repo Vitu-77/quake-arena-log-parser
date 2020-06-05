@@ -5,19 +5,7 @@ const shortid = require('shortid');
 const readLine = require('readline');
 
 module.exports = {
-	readFile: async () => {
-		const log = await fs.readFileSync(
-			path.resolve(__dirname, '..', 'log', 'quake.log'),
-			'ascii',
-			(error, data) => {
-				if (error) throw error;
-			}
-		);
-
-		return log.toString();
-	},
-
-	groupByGames: async (log) => {
+	parse: async () => {
 		try {
 			const fileStream = fs.createReadStream(path.resolve(__dirname, '..', 'log', 'quake.log'));
 
@@ -28,19 +16,23 @@ module.exports = {
 			const games = [];
 
 			/**
-			 * A função getLinePlayers processa a linha e retorna todos os
-			 * jogadores presentes nela, bem como as kills de cada um
+			 * A função parseLineWithKill processa a linha e retorna todos os
+			 * jogadores presentes nela, bem como as kills de cada um.
 			 */
-			const getLinePlayers = (line) => {
-				const lineArray = line.split(' ');
-				const currentGame = games[games.length - 1];
+			const parseLineWithKill = (line) => {
+				const lineArray = line.split(' '); // converte a linha para array
+				const currentGame = games[games.length - 1]; // o game atual sempre será a última posição do array.
 
-				lineArray.forEach((currentPosition, index) => {
-					if (currentPosition === 'killed') {
+				/**
+				 * a ideia aqui é percorrer o array com as palavras da linha e
+				 * buscar pela palavra "killed", já que ela determina quem matou e quem morreu.
+				 */
+				lineArray.forEach((currentWord, index) => {
+					if (currentWord === 'killed') {
 						const killer = lineArray[index - 1];
 						const murdered = lineArray[index + 1];
 
-						if (killer === murdered) return;
+						if (killer === murdered) return; // nada ocorre caso o player tenha se matado.
 
 						if (killer !== '<world>') {
 							if (!currentGame.players.includes(killer)) {
@@ -73,7 +65,11 @@ module.exports = {
 				});
 			};
 
-			const buildGame = async (line) => {
+			/**
+			 * processLine verifica se a linha passada como parâmetro
+			 * determina o início de um novo game ou uma kill.
+			 */
+			const processLine = async (line) => {
 				let totalKills = 0;
 				const id = shortid.generate();
 				const players = [];
@@ -90,25 +86,15 @@ module.exports = {
 
 				if (line.includes('Kill:')) {
 					games[games.length - 1].total_kills = games[games.length - 1].total_kills + 1;
-					getLinePlayers(line);
+					parseLineWithKill(line);
 				}
 			};
 
 			for await (const line of _readline) {
-				buildGame(line);
+				processLine(line);
 			}
 
-			// for await (const line of readline) {
-			// 	if (line.includes('InitGame')) {
-			//         console.log(line)
-			// 		g++;
-			// 	}
-			// 	if (line.includes('Kill:')) {
-			// 		k++;
-			// 	}
-			// }
-
-			return { games };
+			return games;
 		} catch (error) {
 			return error;
 		}
