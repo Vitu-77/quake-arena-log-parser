@@ -19,8 +19,8 @@ describe('Show', () => {
 	it('should return an error 400', async () => {
 		const id = 'NaN';
 		const response = await request(app).get(`/game/${id}`);
-        
-        // o status de resposta deve ser 400, pois o ID fornecido não é um número.
+
+		// o status de resposta deve ser 400, pois o ID fornecido não é um número.
 		expect(response.status).toBe(400);
 	});
 });

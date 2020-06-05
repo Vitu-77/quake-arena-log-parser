@@ -18,10 +18,10 @@ describe('Parser', () => {
 
 			// a pontuação de todos os players deve ser do tipo number.
 			for (const player in game.kills) {
-				expect(typeof game.kills[player]).toBe('number');
+				expect(game.kills[player]).not.toBeNaN();
 			}
 
-			expect(typeof game.total_kills).toBe('number'); // total_kills deve ser do tipo number.
+			expect(game.total_kills).not.toBeNaN(); // total_kills deve ser do tipo number.
 			expect(game.total_kills).toBeGreaterThanOrEqual(0); // total_kills não pode ser negativo
 		});
 	});
