@@ -37,18 +37,38 @@ module.exports = {
 
 				lineArray.forEach((currentPosition, index) => {
 					if (currentPosition === 'killed') {
-						if (lineArray[index - 1] !== '<world>') {
-							const murderer = lineArray[index - 1];
+						const killer = lineArray[index - 1];
+						const murdered = lineArray[index + 1];
 
-							if (!currentGame.players.includes(murderer)) {
-								currentGame.players.push(murderer);
+						if (killer === murdered) return;
+
+						if (killer !== '<world>') {
+							if (!currentGame.players.includes(killer)) {
+								currentGame.players.push(killer);
+							}
+
+							if (currentGame.kills.hasOwnProperty(killer)) {
+								currentGame.kills[killer] = currentGame.kills[killer] + 1;
+							} else {
+								currentGame.kills[killer] = 1;
+							}
+						} else {
+							if (currentGame.kills.hasOwnProperty(murdered)) {
+								currentGame.kills[murdered] = currentGame.kills[murdered] - 1;
+							} else {
+								currentGame.kills[murdered] = -1;
 							}
 						}
 
-						if (!currentGame.players.includes(lineArray[index + 1])) {
-							const murdered = lineArray[index + 1];
+						if (!currentGame.players.includes(murdered)) {
 							currentGame.players.push(murdered);
 						}
+					}
+				});
+
+				currentGame.players.forEach((player) => {
+					if (!currentGame.kills.hasOwnProperty(player)) {
+						currentGame.kills[player] = 0;
 					}
 				});
 			};
