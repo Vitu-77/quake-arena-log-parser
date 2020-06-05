@@ -17,5 +17,25 @@ module.exports = {
 		}
 	},
 
-	show: async (req, res) => {},
+	show: async (req, res) => {
+		try {
+			const { id } = req.params;
+
+			if (isNaN(Number(id))) {
+				throw { status: 400, message: 'id should be a number' };
+			}
+
+			const logStream = fs.createReadStream(path.resolve(__dirname, '..', 'log', 'quake.log'));
+			const games = await Parser.parse(logStream);
+			const game = games.filter((game) => Number(game.id) === Number(id))[0];
+
+			if (game) {
+				return res.status(200).json({ game });
+			} else {
+				throw { status: 404, message: 'game not found' };
+			}
+		} catch (error) {
+			return res.status(error.status || 500).json({ error: error.message });
+		}
+	},
 };
