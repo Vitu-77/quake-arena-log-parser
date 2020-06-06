@@ -34,3 +34,8 @@ _Edit .prettierrc.js if you want to change some the way like identation works (o
 - (GET) - **"/games"** - Return all games in the .log file
 - (GET) - **"/game/:id"** - Return a game containing the provided ID
 - (GET) - **"/ranking"** - Return the ranking of all players by kills
+
+<br />
+<br />
+
+_Quake 3 Arena is a trademark of [Id Software](https://www.idsoftware.com/en-us/)_
