@@ -1,6 +1,0 @@
-Todo:
-    ✔ Read data from .log file @started(20-06-04 18:25) @done(20-06-04 18:58) @lasted(33m10s)
-    ✔ Group data by games @done(20-06-04 22:11)
-    ✔ Colect kills info @done(20-06-05 14:45)
-    ☐ Build route to return all parsed games
-    ☐ Build routes to filter game by ID
