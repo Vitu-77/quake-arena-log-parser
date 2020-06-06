@@ -38,4 +38,4 @@ _Edit .prettierrc.js if you want to change some the way like identation works (o
 <br />
 <br />
 
-_Quake 3 Arena is a trademark of [Id Software](https://www.idsoftware.com/en-us/)_
+_Quake 3 Arena is a trademark of [id Software](https://www.idsoftware.com/en-us/)_
