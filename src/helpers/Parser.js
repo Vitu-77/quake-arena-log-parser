@@ -11,8 +11,8 @@ module.exports = {
 			 * jogadores presentes nela, bem como as kills de cada um.
 			 */
 			const parseLineWithKill = (line) => {
-				const lineArray = line.split(' '); // converte a linha para array
-				const currentGame = games[games.length - 1]; // o game atual sempre será a última posição do array.
+				const lineArray = line.split(' ');
+				const currentGame = games[games.length - 1];
 
 				/**
 				 * a ideia aqui é percorrer o array com as palavras da linha e
@@ -27,12 +27,15 @@ module.exports = {
 
 						if (killer !== '<world>') {
 							if (!currentGame.players.includes(killer)) {
+								// caso o killer não esteja no array de player, ele é adicionado
 								currentGame.players.push(killer);
 							}
 
 							if (currentGame.kills.hasOwnProperty(killer)) {
+								// caso o obj de kills possua o killer, ele recebe +1 ponto
 								currentGame.kills[killer] = currentGame.kills[killer] + 1;
 							} else {
+								// senão é inserido com 1 ponto.
 								currentGame.kills[killer] = 1;
 							}
 						} else {
@@ -49,6 +52,12 @@ module.exports = {
 					}
 				});
 
+
+				/**
+				 * a rotina a seguir percorre o array de player e busca por 
+				 * possíveis jogadores sem pontuação, em seguida insere 
+				 * os mesmos na pontuação com 0 pontos;
+				 */
 				currentGame.players.forEach((player) => {
 					if (!currentGame.kills.hasOwnProperty(player)) {
 						currentGame.kills[player] = 0;
@@ -82,9 +91,9 @@ module.exports = {
 			};
 
 			/**
-			 * sanitizeGamesArray retira do array possíveis jogos sem jogadores
+			 * removeInvalidGames retira do array possíveis jogos sem jogadores
 			 */
-			const sanitizeGamesArray = (games) => {
+			const removeInvalidGames = (games) => {
 				return games.filter((game) => game.players.length >= 1);
 			};
 
@@ -92,7 +101,7 @@ module.exports = {
 				processLine(line);
 			}
 
-			return sanitizeGamesArray(games);
+			return removeInvalidGames(games);
 		} catch (error) {
 			return error;
 		}

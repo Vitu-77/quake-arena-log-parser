@@ -22,10 +22,8 @@ module.exports = {
 						const points = game.kills[killer];
 
 						if (!ranking[killer]) {
-							// caso o player ainda não esteja no ranking, ele é adicionado
 							ranking[killer] = points;
 						} else {
-							// senão, sua pontuação é atualizada
 							ranking[killer] += points;
 						}
 					}
